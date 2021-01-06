@@ -1,5 +1,5 @@
 import { decode } from "html-entities";
-import mockApiResponses from "../../constants/MockApiResponses";
+import MockApiResponses from "../../constants/MockApiResponses";
 
 import Booru from "../Booru";
 import Post from "../Post";
@@ -85,7 +85,7 @@ export default class Gelbooru implements Booru {
     }
 
     async getPosts(tags: string[]): Promise<GelbooruPost[]> {
-        if (__DEV__) return GelbooruPost.fromJson(mockApiResponses.posts);
+        if (__DEV__) return GelbooruPost.fromJson(MockApiResponses.posts);
 
         const json = await this.api({
             page: "dapi", s: "post", q: "index", limit: "50",
