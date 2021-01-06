@@ -9,32 +9,25 @@ const styles = StyleSheet.create({
     },
 });
 
-interface PostThumbProps {
+export default function PostThumb(props: {
     postId: string;
     postStuff: boolean;
     postUrlSmall: string;
     onPress: (postId: string) => void;
-}
-
-export default function PostThumb({
-    postId,
-    postStuff,
-    postUrlSmall,
-    onPress
-}: PostThumbProps) {
+}) {
     return (
-        <Pressable onPress={() => onPress(postId)}>
+        <Pressable onPress={() => props.onPress(props.postId)}>
             <Text
                 lightColor="#000000"
                 darkColor="#ffffff"
             >
                 {"{"}
-                {postStuff ? "yes" : "no"}
+                {props.postStuff ? "yes" : "no"}
                 {"}"}
             </Text>
             <Image
                 style={styles.postThumb}
-                source={{uri: postUrlSmall}}
+                source={{uri: props.postUrlSmall}}
             />
         </Pressable>
     );
