@@ -1,25 +1,29 @@
 import * as React from "react";
 import { StyleSheet, Button } from "react-native";
 
-import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 
-import Booru from "../api/Booru";
 import GlobalState from "../GlobalState";
-
-function exampleApiCall() {
-    console.log("Button press!");
-    const b = GlobalState.instance.booru;
-    b.getPosts(["matoi_ryuuko"]).then(posts => console.log("posts[0] =", posts[0]));
-}
+import PostThumbList from "../components/PostThumbList";
+import Post from "../api/Post";
 
 export default function TabOneScreen() {
+    const [posts, setPosts] = React.useState([] as Post[]);
+
+    async function exampleApiCall() {
+        console.log("Button press!");
+        const b = GlobalState.instance.booru;
+        const resPosts = await b.getPosts(["matoi_ryuuko"]);
+        console.log("got", resPosts.length, "posts");
+        setPosts(resPosts);
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Tab One</Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-            <Text>This is my modified Tab One. Live reloading is pretty cool.</Text>
             <Button title="My magic button" onPress={exampleApiCall}></Button>
+            <PostThumbList posts={posts}></PostThumbList>
         </View>
     );
 }

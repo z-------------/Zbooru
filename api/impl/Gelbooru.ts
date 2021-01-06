@@ -1,4 +1,5 @@
 import { decode } from "html-entities";
+import mockApiResponses from "../../constants/MockApiResponses";
 
 import Booru from "../Booru";
 import Post from "../Post";
@@ -72,17 +73,22 @@ export default class Gelbooru implements Booru {
      * @param pairs A dictionary of GET parameter key-value pairs.
      */
     private async api(pairs: Dictionary<string>): Promise<any> {
+        if (__DEV__) console.warn("We are in development mode; try to keep network API calls to a minimum.");
+
         const params = this.hasCredentials ?
             Object.assign(this.credentialsPairs, pairs) :
             pairs;
         const url = this.apiBase + "?json=1" +
             Object.entries(params).map(kv => "&" + kv.join("=")).join("");
+        console.log("Calling API:", url);
         return (await fetch(url)).json();
     }
 
     async getPosts(tags: string[]): Promise<GelbooruPost[]> {
+        if (__DEV__) return GelbooruPost.fromJson(mockApiResponses.posts);
+
         const json = await this.api({
-            page: "dapi", s: "post", q: "index",
+            page: "dapi", s: "post", q: "index", limit: "50",
             tags: tags.join(" "),
         });
         return GelbooruPost.fromJson(json);
