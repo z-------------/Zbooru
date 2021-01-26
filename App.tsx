@@ -6,7 +6,7 @@ import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 
-import GlobalState from "./GlobalState";
+import GlobalBooruState from "./state/GlobalBooruState";
 import Gelbooru from "./api/impl/Gelbooru";
 
 export default function App() {
@@ -16,7 +16,7 @@ export default function App() {
     if (!isLoadingComplete) {
         return null;
     } else {
-        GlobalState.instance.booru = new Gelbooru("", "");
+        GlobalBooruState.instance.booru = new Gelbooru("", "");
         return (
             <SafeAreaProvider>
                 <Navigation colorScheme={colorScheme} />

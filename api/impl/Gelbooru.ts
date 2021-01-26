@@ -21,9 +21,9 @@ export class GelbooruPost implements Post {
     isDetailsLoaded = false;
     
     urlFull: string;
-    get urlLarge(): string { return `https://img2.gelbooru.com/samples/${this.directory}/sample_${this.hash}.jpg`; }
-    get urlSmall(): string { return `https://thumbs.gelbooru.com/${this.directory}/thumbnail_${this.hash}.jpg`; }
-    get siteUrl(): string { return `https://gelbooru.com/index.php?page=post&s=view&id=${this.id}`; }
+    urlLarge: string;
+    urlSmall: string;
+    siteUrl: string;
 
     private directory: string;
     private hash: string;
@@ -33,7 +33,11 @@ export class GelbooruPost implements Post {
         this.sourceUrl = decode(json["source"] as string);
         this.directory = json["directory"] as string;
         this.hash = json["hash"] as string;
+
         this.urlFull = json["file_url"] as string;
+        this.urlLarge = `https://img2.gelbooru.com/samples/${this.directory}/sample_${this.hash}.jpg`;
+        this.urlSmall = `https://thumbs.gelbooru.com/${this.directory}/thumbnail_${this.hash}.jpg`;
+        this.siteUrl = `https://gelbooru.com/index.php?page=post&s=view&id=${this.id}`;
 
         this.tags = (json["tags"] as string)
             .split(" ")

@@ -3,21 +3,16 @@ import { FlatList } from "react-native";
 import Post from "../api/Post";
 import PostThumb from "./PostThumb";
 
-interface PostThumbListProps {
-    posts: Post[];
-}
+export default function PostThumbList(props: {
+    postIds: string[],
+}) {
+    const [postIds, setPostIds] = React.useState([] as string[]);
 
-export default function PostThumbList(props: PostThumbListProps) {
-    const [posts, setPosts] = React.useState([] as Post[]);
-
-    const renderItem = ({ item }: { item: Post }) => {
-        console.log("renderItem", item.id);
+    const renderItem = ({ item }: { item: string }) => {
+        console.log("renderItem", item);
         return (
             <PostThumb
-                postId={item.id}
-                postStuff={item.isDetailsLoaded}
-                postUrlSmall={item.urlSmall}
-                onPress={handlePress}
+                postId={item}
             ></PostThumb>
         );
     };
@@ -25,43 +20,20 @@ export default function PostThumbList(props: PostThumbListProps) {
     React.useEffect(() => {
         console.log("posts prop changed");
         // update our state posts by adding only the prop posts that we don't already have
-        const postsNew: Post[] = [];
-        for (const propPost of props.posts) {
-            const statePost = findPost(propPost.id);
-            if (statePost != null) {
-                postsNew.push(statePost);
-            } else {
-                postsNew.push(propPost);
+        const postIdsNew = [] as string[];
+        for (const propPostId of props.postIds) {
+            if (postIds.indexOf(propPostId) === -1) {
+                postIdsNew.push(propPostId);
             }
         }
-        setPosts(postsNew);
-    }, [props.posts]);
-
-    function handlePress(postId: string) {
-        console.log("handlePress.");
-        setPosts(posts.map(post => {
-            if (post.id === postId) {
-                post.isDetailsLoaded = !post.isDetailsLoaded;
-            }
-            return post;
-        }));
-    }
-
-    // Find a post in our state posts
-    function findPost(postId: string) {
-        for (const statePost of posts) {
-            if (statePost.id === postId) {
-                return statePost;
-            }
-        }
-        return null;
-    }
+        setPostIds(postIdsNew);
+    }, [props.postIds]);
 
     return (
         <FlatList
-            data={posts}
+            data={postIds}
             renderItem={renderItem}
-            keyExtractor={post => post.id}
+            keyExtractor={postId => postId}
         ></FlatList>
     );
 }

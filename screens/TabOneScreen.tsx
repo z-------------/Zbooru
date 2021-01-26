@@ -3,19 +3,24 @@ import { StyleSheet, Button } from "react-native";
 
 import { Text, View } from "../components/Themed";
 
-import GlobalState from "../GlobalState";
+import GlobalBooruState from "../state/GlobalBooruState";
+import { GlobalPostsState, useGlobalPostsState } from "../state/GlobalPostsState";
 import PostThumbList from "../components/PostThumbList";
 import Post from "../api/Post";
 
 export default function TabOneScreen() {
-    const [posts, setPosts] = React.useState([] as Post[]);
+    const [postIds, setPostIds] = React.useState([] as string[]);
 
     async function exampleApiCall() {
         console.log("Button press!");
-        const b = GlobalState.instance.booru;
+        const b = GlobalBooruState.instance.booru;
         const resPosts = await b.getPosts(["matoi_ryuuko"]);
         console.log("got", resPosts.length, "posts");
-        setPosts(resPosts);
+
+        for (const post of resPosts) {
+            GlobalPostsState.instance.setValue(post.id, post);
+        }
+        setPostIds(resPosts.map(post => post.id));
     }
 
     return (
@@ -23,7 +28,7 @@ export default function TabOneScreen() {
             <Text style={styles.title}>Tab One</Text>
             <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
             <Button title="My magic button" onPress={exampleApiCall}></Button>
-            <PostThumbList posts={posts}></PostThumbList>
+            <PostThumbList postIds={postIds}></PostThumbList>
         </View>
     );
 }
